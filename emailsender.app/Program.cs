@@ -29,6 +29,7 @@ if (string.IsNullOrWhiteSpace(emailSettings.Host) ||
 
 var emailService = new EmailService(emailSettings);
 var excelService = new ExcelService();
+var envioService = new EnvioService(emailService);
 
 Console.WriteLine("==================================");
 Console.WriteLine("          EMAIL SENDER");
@@ -147,52 +148,27 @@ if (!string.Equals(
 }
 
 Console.WriteLine();
+Console.WriteLine("Realizando envios...");
+Console.WriteLine();
 
-var enviados = 0;
-var falhas = 0;
-
-for (var i = 0; i < destinatarios.Count; i++)
-{
-    var destinatario = destinatarios[i];
-
-    var emailMessage = new EmailMessage
-    {
-        Destinatario = destinatario.Email,
-        DestinatarioNome = destinatario.Nome,
-        Assunto = assunto,
-        Body = corpo
-    };
-
-    try
-    {
-        Console.WriteLine(
-            $"[{i + 1}/{destinatarios.Count}] " +
-            $"Enviando para {destinatario.Nome}..."
-        );
-
-        await emailService.SendEmail(emailMessage);
-
-        enviados++;
-
-        Console.WriteLine("Enviado com sucesso.");
-    }
-    catch (Exception ex)
-    {
-        falhas++;
-
-        Console.WriteLine(
-            $"Falha ao enviar para {destinatario.Email}:"
-        );
-
-        Console.WriteLine(ex.Message);
-    }
-
-    Console.WriteLine();
-}
+var resultado = await envioService.EnviarAsync(destinatarios, assunto, corpo);
 
 Console.WriteLine("==================================");
 Console.WriteLine("          RESULTADO");
 Console.WriteLine("==================================");
-Console.WriteLine($"Enviados com sucesso: {enviados}");
-Console.WriteLine($"Falhas: {falhas}");
-Console.WriteLine($"Total: {destinatarios.Count}");
+Console.WriteLine($"Enviados com sucesso: {resultado.Enviados}");
+Console.WriteLine($"Falhas: {resultado.Falhas}");
+Console.WriteLine($"Total: {resultado.Total}");
+
+if (resultado.DetalhesFalhas.Count > 0)
+{
+    Console.WriteLine();
+    Console.WriteLine("Detalhes das falhas:");
+
+    foreach (var falha in resultado.DetalhesFalhas)
+    {
+        Console.WriteLine($"Destinatário: {falha.Nome}");
+        Console.WriteLine($"E-mail: {falha.Email}");
+        Console.WriteLine($"Erro: {falha.Erro}");
+    }
+}
