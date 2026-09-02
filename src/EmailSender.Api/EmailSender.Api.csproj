@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c377c3e0-abbb-4fba-85bf-4ea35f2c0f5c</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmailSender.Core\EmailSender.Core.csproj" />
+    <ProjectReference Include="..\EmailSender.Infrastructure\EmailSender.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

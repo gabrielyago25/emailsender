@@ -1,0 +1,16 @@
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\bin\Debug\net10.0\EmailSender.Infrastructure.deps.json
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\bin\Debug\net10.0\EmailSender.Infrastructure.dll
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\bin\Debug\net10.0\EmailSender.Infrastructure.pdb
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\bin\Debug\net10.0\EmailSender.Core.dll
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\bin\Debug\net10.0\EmailSender.Core.pdb
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.AssemblyInfo.cs
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.sourcelink.json
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSen.2FB2AA8A.Up2Date
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.dll
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\refint\EmailSender.Infrastructure.dll
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\EmailSender.Infrastructure.pdb
+C:\Users\User\projetos\emailsender\src\EmailSender.Infrastructure\obj\Debug\net10.0\ref\EmailSender.Infrastructure.dll
