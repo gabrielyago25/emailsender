@@ -30,3 +30,12 @@
 /home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/runtimes/win/lib/net10.0/System.Security.Cryptography.Pkcs.dll
 /home/gabrielb/Projetos/emailsender/emailsender.app/obj/Debug/net10.0/emailsender.app.csproj.AssemblyReference.cache
 /home/gabrielb/Projetos/emailsender/emailsender.app/obj/Debug/net10.0/emailsen.C818E00F.Up2Date
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/ClosedXML.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/ClosedXML.Parser.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/DocumentFormat.OpenXml.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/DocumentFormat.OpenXml.Framework.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/ExcelNumberFormat.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/RBush.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/SixLabors.Fonts.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/bin/Debug/net10.0/System.IO.Packaging.dll
+/home/gabrielb/Projetos/emailsender/emailsender.app/obj/Debug/net10.0/emailsender.app.sourcelink.json
