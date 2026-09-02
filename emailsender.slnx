@@ -1,7 +1,8 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/EmailSender.Api/EmailSender.Api.csproj" />
-    <Project Path="src/EmailSender.Core/EmailSender.Core.csproj" />
-    <Project Path="src/EmailSender.Infrastructure/EmailSender.Infrastructure.csproj" />
+  <Folder Name="/backend/" />
+  <Folder Name="/backend/src/">
+    <Project Path="backend/src/EmailSender.Api/EmailSender.Api.csproj" />
+    <Project Path="backend/src/EmailSender.Core/EmailSender.Core.csproj" />
+    <Project Path="backend/src/EmailSender.Infrastructure/EmailSender.Infrastructure.csproj" />
   </Folder>
 </Solution>
