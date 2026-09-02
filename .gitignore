@@ -5,6 +5,7 @@ appsettings.*.local.json
 # Variáveis de ambiente
 .env
 .env.*
+secrets.json
 
 # Segredos
 secrets.json
@@ -14,3 +15,11 @@ secrets.json
 
 # Planilha de testes
 testes/
+
+#.NET build
+**/bin/
+**/obj/
+
+#React
+node_modules/
+dist/
