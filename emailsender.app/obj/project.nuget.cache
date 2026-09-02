@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "pYpSv2L82Ls=",
+  "success": true,
+  "projectFilePath": "/home/gabrielb/Projetos/emailsender/emailsender.app/emailsender.app.csproj",
+  "expectedPackageFiles": [
+    "/home/gabrielb/.nuget/packages/bouncycastle.cryptography/2.6.2/bouncycastle.cryptography.2.6.2.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/mailkit/4.17.0/mailkit.4.17.0.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.configuration/10.0.11/microsoft.extensions.configuration.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.configuration.abstractions/10.0.11/microsoft.extensions.configuration.abstractions.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.configuration.binder/10.0.11/microsoft.extensions.configuration.binder.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.configuration.fileextensions/10.0.11/microsoft.extensions.configuration.fileextensions.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.configuration.json/10.0.11/microsoft.extensions.configuration.json.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.configuration.usersecrets/10.0.11/microsoft.extensions.configuration.usersecrets.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.fileproviders.abstractions/10.0.11/microsoft.extensions.fileproviders.abstractions.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.fileproviders.physical/10.0.11/microsoft.extensions.fileproviders.physical.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.filesystemglobbing/10.0.11/microsoft.extensions.filesystemglobbing.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/microsoft.extensions.primitives/10.0.11/microsoft.extensions.primitives.10.0.11.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/mimekit/4.17.0/mimekit.4.17.0.nupkg.sha512",
+    "/home/gabrielb/.nuget/packages/system.security.cryptography.pkcs/10.0.0/system.security.cryptography.pkcs.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

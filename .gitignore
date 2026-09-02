@@ -1,0 +1,13 @@
+# Configurações locais da aplicação
+appsettings.json
+appsettings.*.local.json
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Segredos
+secrets.json
+
+# VS Code local
+.vscode/
