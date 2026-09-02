@@ -7,16 +7,21 @@ public class EnvioService
     private readonly EmailService _emailService;
     private readonly TimeSpan _intervaloEntreEnvios;
 
-    public EnvioService(EmailService emailService, TimeSpan? intervaloEntreEnvios = null)
+    public EnvioService(
+        EmailService emailService,
+        TimeSpan? intervaloEntreEnvios = null)
     {
         _emailService = emailService;
-        _intervaloEntreEnvios = intervaloEntreEnvios ?? TimeSpan.FromSeconds(60);
+
+        _intervaloEntreEnvios =
+            intervaloEntreEnvios ?? TimeSpan.FromSeconds(60);
     }
 
     public async Task<ResultadoEnvio> EnviarAsync(
         List<Destinatario> destinatarios,
         string assunto,
         string corpo,
+        IProgress<ProgressoEnvio>? progresso = null,
         CancellationToken cancellationToken = default)
     {
         var resultado = new ResultadoEnvio
@@ -26,7 +31,19 @@ public class EnvioService
 
         for (var i = 0; i < destinatarios.Count; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var destinatario = destinatarios[i];
+
+            progresso?.Report(new ProgressoEnvio
+            {
+                Processados = i,
+                Total = destinatarios.Count,
+                Nome = destinatario.Nome,
+                Email = destinatario.Email,
+                Status = "Enviando"
+            });
+
             var emailMessage = new EmailMessage
             {
                 Destinatario = destinatario.Email,
@@ -40,6 +57,19 @@ public class EnvioService
                 await _emailService.SendEmail(emailMessage);
 
                 resultado.Enviados++;
+
+                progresso?.Report(new ProgressoEnvio
+                {
+                    Processados = i + 1,
+                    Total = destinatarios.Count,
+                    Nome = destinatario.Nome,
+                    Email = destinatario.Email,
+                    Status = "Enviado"
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -53,15 +83,59 @@ public class EnvioService
                         Erro = ex.Message
                     }
                 );
+
+                progresso?.Report(new ProgressoEnvio
+                {
+                    Processados = i + 1,
+                    Total = destinatarios.Count,
+                    Nome = destinatario.Nome,
+                    Email = destinatario.Email,
+                    Status = "Falha"
+                });
             }
 
-            // Aguarda apenas se existir outro destinatário
+            // Aguarda somente se ainda houver outro destinatário.
             if (i < destinatarios.Count - 1)
             {
-                await Task.Delay(_intervaloEntreEnvios, cancellationToken);
+                await AguardarProximoEnvioAsync(
+                    i + 1,
+                    destinatarios.Count,
+                    destinatario,
+                    progresso,
+                    cancellationToken
+                );
             }
         }
 
         return resultado;
+    }
+
+    private async Task AguardarProximoEnvioAsync(
+        int processados,
+        int total,
+        Destinatario destinatario,
+        IProgress<ProgressoEnvio>? progresso,
+        CancellationToken cancellationToken)
+    {
+        var segundos =
+            (int)Math.Ceiling(_intervaloEntreEnvios.TotalSeconds);
+
+        for (var restante = segundos; restante > 0; restante--)
+        {
+            progresso?.Report(new ProgressoEnvio
+            {
+                Processados = processados,
+                Total = total,
+                Nome = destinatario.Nome,
+                Email = destinatario.Email,
+                Status = "Aguardando",
+                SegundosRestantes = restante
+            });
+
+            await Task.Delay(
+                TimeSpan.FromSeconds(1),
+                cancellationToken
+            );
+        }
     }
 }

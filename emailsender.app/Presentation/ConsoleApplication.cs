@@ -56,14 +56,34 @@ public class ConsoleApplication
             return;
         }
 
-        Console.WriteLine();
-        Console.WriteLine("Realizando envios...");
-        Console.WriteLine();
+        var progresso = new Progress<ProgressoEnvio>(p =>
+            {
+                switch (p.Status)
+                {
+                    case "Enviando":
+                        Console.WriteLine();
+                        Console.WriteLine($"[{p.Processados + 1}/{p.Total}] " +$"Enviando para {p.Nome}...");
+                        break;
+
+                    case "Enviado":
+                        Console.WriteLine($"E-mail enviado com sucesso. " +$"Progresso: {p.Percentual}%");
+                        break;
+
+                    case "Falha":
+                        Console.WriteLine($"Falha ao enviar para {p.Email}.");
+                        break;
+
+                    case "Aguardando":
+                        Console.Write($"\rPróximo envio em " + $"{p.SegundosRestantes}s...   ");
+                        break;
+                }
+            });
 
         var resultado = await _envioService.EnviarAsync(
             destinatarios,
             assunto,
-            corpo
+            corpo,
+            progresso
         );
 
         ExibirResultado(resultado);
