@@ -5,24 +5,28 @@ namespace emailsender.app.Services;
 public class EnvioService
 {
     private readonly EmailService _emailService;
+    private readonly TimeSpan _intervaloEntreEnvios;
 
-    public EnvioService(EmailService emailService)
+    public EnvioService(EmailService emailService, TimeSpan? intervaloEntreEnvios = null)
     {
         _emailService = emailService;
+        _intervaloEntreEnvios = intervaloEntreEnvios ?? TimeSpan.FromSeconds(60);
     }
 
     public async Task<ResultadoEnvio> EnviarAsync(
         List<Destinatario> destinatarios,
         string assunto,
-        string corpo)
+        string corpo,
+        CancellationToken cancellationToken = default)
     {
         var resultado = new ResultadoEnvio
         {
             Total = destinatarios.Count
         };
 
-        foreach (var destinatario in destinatarios)
+        for (var i = 0; i < destinatarios.Count; i++)
         {
+            var destinatario = destinatarios[i];
             var emailMessage = new EmailMessage
             {
                 Destinatario = destinatario.Email,
@@ -49,6 +53,12 @@ public class EnvioService
                         Erro = ex.Message
                     }
                 );
+            }
+
+            // Aguarda apenas se existir outro destinatário
+            if (i < destinatarios.Count - 1)
+            {
+                await Task.Delay(_intervaloEntreEnvios, cancellationToken);
             }
         }
 
