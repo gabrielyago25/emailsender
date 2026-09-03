@@ -388,9 +388,7 @@ textarea {
     padding: 20px;
   }
 
-  .upload-area,
-  .invalid-recipient,
-  .invalid-recipient-info {
+  .upload-area {
     align-items: flex-start;
     flex-direction: column;
   }
