@@ -3,6 +3,7 @@ import type {ChangeEvent, SubmitEvent} from "react";
 
 import { validarPlanilha } from "../services/planilhaService";
 import type {ResultadoValidacaoPlanilha} from "../types/planilha";
+import { RevisaoEnvio } from "../components/RevisaoEnvio";
 
 export function NovoEnvioPage(){
     const [assunto, setAssunto] = useState("");
@@ -11,6 +12,7 @@ export function NovoEnvioPage(){
     const [validacao, setValidacao] = useState<ResultadoValidacaoPlanilha | null>(null);
     const [carregandoPlanilha, setCarregandoPlanilha] = useState(false);
     const [error, setErro] = useState<string | null>(null);
+    const [revisando, setRevisando] = useState(false);
 
     async function handlePlanilhaChange(event: ChangeEvent<HTMLInputElement>) {
         const arquivoSelecionado = event.target.files?.[0];
@@ -58,10 +60,15 @@ export function NovoEnvioPage(){
             return;
         }
         setErro(null);
-        console.log({assunto, corpo, arquivo, validacao});
+        setRevisando(true);
     }
 
-
+    if (revisando && arquivo && validacao){
+        return (
+            <RevisaoEnvio assunto={assunto} corpo={corpo} nomeArquivo={arquivo.name} totalValidos={validacao.totalValidos} totalInvalidos={validacao.totalInvalidos} onVoltar={() => setRevisando(false)} onConfirmar={() => {console.log("Confirmar envio");}}
+            />
+        );
+    }
     return (
         <main className="container">
             <header className="page-header">
