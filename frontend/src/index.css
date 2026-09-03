@@ -1,18 +1,33 @@
+/* ==============================
+   Base / tema
+   ============================== */
+
 * {
   box-sizing: border-box;
 }
 
 :root {
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  color: #1f2937;
-  background: #f5f7fa;
+  --color-text: #1f2937;
+  --color-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-background: #f5f7fa;
+  --color-surface: #ffffff;
+
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+
+  --color-success: #15803d;
+
+  --color-danger: #b91c1c;
+  --color-danger-dark: #991b1b;
+  --color-danger-text: #7f1d1d;
+  --color-danger-border: #fecaca;
+  --color-danger-background: #fef2f2;
+
+  color: var(--color-text);
+  background: var(--color-background);
 }
 
 body {
@@ -27,6 +42,11 @@ textarea {
   font: inherit;
 }
 
+
+/* ==============================
+   Estrutura da página
+   ============================== */
+
 .container {
   width: min(920px, calc(100% - 40px));
   margin: 48px auto;
@@ -36,14 +56,23 @@ textarea {
   margin-bottom: 28px;
 }
 
+.page-header h1,
+.form-section h2 {
+  margin-top: 0;
+}
+
 .page-header h1 {
-  margin: 0;
+  margin-bottom: 0;
   font-size: 28px;
+}
+
+.page-header p,
+.section-title p {
+  color: var(--color-muted);
 }
 
 .page-header p {
   margin: 8px 0 0;
-  color: #6b7280;
 }
 
 .email-form {
@@ -53,14 +82,14 @@ textarea {
 }
 
 .form-section {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
   padding: 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
 }
 
 .form-section h2 {
-  margin: 0 0 22px;
+  margin-bottom: 22px;
   font-size: 20px;
 }
 
@@ -70,9 +99,13 @@ textarea {
 
 .section-title p {
   margin: 0 0 22px;
-  color: #6b7280;
   font-size: 14px;
 }
+
+
+/* ==============================
+   Campos do formulário
+   ============================== */
 
 .form-group {
   display: flex;
@@ -86,47 +119,54 @@ textarea {
 }
 
 .form-group label {
-  font-weight: 600;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
+  padding: 12px 14px;
+
+  color: #111827;
+  background: var(--color-surface);
+
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  padding: 12px 14px;
-  background: #ffffff;
-  color: #111827;
   outline: none;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px
-    rgba(79, 70, 229, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
 .form-group textarea {
-  resize: vertical;
   min-height: 180px;
+  resize: vertical;
 }
 
 .character-count {
   align-self: flex-end;
-  font-size: 12px;
   color: #9ca3af;
+  font-size: 12px;
 }
+
+
+/* ==============================
+   Upload da planilha
+   ============================== */
 
 .upload-area {
   display: flex;
   align-items: center;
   gap: 14px;
+
   padding: 18px;
+
   background: #f9fafb;
   border: 1px dashed #cbd5e1;
   border-radius: 10px;
@@ -143,7 +183,7 @@ textarea {
 
   padding: 10px 16px;
 
-  background: #ffffff;
+  background: var(--color-surface);
   border: 1px solid #d1d5db;
   border-radius: 7px;
 
@@ -162,77 +202,152 @@ textarea {
   font-weight: 500;
 }
 
-.file-hint {
-  color: #6b7280;
+.file-hint,
+.status-message {
+  color: var(--color-muted);
   font-size: 14px;
 }
 
 .status-message {
   margin-top: 16px;
-  color: #4b5563;
 }
 
-.recipients-card {
+
+/* ==============================
+   Resultado da validação
+   ============================== */
+
+.validation-result {
   margin-top: 20px;
-  border: 1px solid #e5e7eb;
+}
+
+.validation-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  padding: 16px;
+
+  background: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.summary-item strong {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.summary-item span {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.summary-valid strong {
+  color: var(--color-success);
+}
+
+.summary-invalid strong {
+  color: var(--color-danger);
+}
+
+
+/* ==============================
+   Destinatários inválidos
+   ============================== */
+
+.invalid-recipients {
+  margin-top: 24px;
+  border: 1px solid var(--color-danger-border);
   border-radius: 10px;
   overflow: hidden;
 }
 
-.recipients-summary {
-  display: flex;
+.invalid-header {
+  padding: 16px 18px;
+  background: var(--color-danger-background);
+  border-bottom: 1px solid var(--color-danger-border);
+}
+
+.invalid-header h3 {
+  margin: 0;
+  color: var(--color-danger-dark);
+  font-size: 16px;
+}
+
+.invalid-header p {
+  margin: 5px 0 0;
+  color: var(--color-danger-text);
+  font-size: 13px;
+}
+
+.invalid-list {
+  background: var(--color-surface);
+}
+
+.invalid-recipient {
+  display: grid;
+  grid-template-columns: 75px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 7px;
+  gap: 16px;
 
   padding: 14px 18px;
-
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.recipients-summary strong {
-  font-size: 18px;
-}
-
-.recipients-summary span {
-  color: #4b5563;
-}
-
-.recipients-list {
-  max-height: 260px;
-  overflow-y: auto;
-}
-
-.recipient {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-
-  padding: 13px 18px;
-
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.recipient:last-child {
+.invalid-recipient:last-child {
   border-bottom: 0;
 }
 
-.recipient strong {
+.invalid-line {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.invalid-data {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.invalid-data strong {
   font-size: 14px;
 }
 
-.recipient span {
-  color: #6b7280;
-  font-size: 14px;
+.invalid-data span {
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+.invalid-reason {
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ==============================
+   Mensagens e ações
+   ============================== */
 
 .error-message {
   padding: 14px 18px;
 
-  color: #991b1b;
-  background: #fef2f2;
+  color: var(--color-danger-dark);
+  background: var(--color-danger-background);
 
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-danger-border);
   border-radius: 8px;
 }
 
@@ -245,7 +360,7 @@ textarea {
   padding: 12px 22px;
 
   color: #ffffff;
-  background: #4f46e5;
+  background: var(--color-primary);
 
   border: 0;
   border-radius: 8px;
@@ -255,12 +370,17 @@ textarea {
 }
 
 .primary-button:hover {
-  background: #4338ca;
+  background: var(--color-primary-hover);
 }
 
-@media (max-width: 600px) {
+
+/* ==============================
+   Responsividade
+   ============================== */
+
+@media (max-width: 650px) {
   .container {
-    width: min(100% - 24px, 920px);
+    width: calc(100% - 24px);
     margin: 24px auto;
   }
 
@@ -268,13 +388,18 @@ textarea {
     padding: 20px;
   }
 
-  .upload-area {
+  .upload-area,
+  .invalid-recipient,
+  .invalid-recipient-info {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .recipient {
-    flex-direction: column;
+  .validation-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .invalid-recipient-info {
     gap: 4px;
   }
 }

@@ -46,12 +46,14 @@ public class PlanilhasController : ControllerBase
         {
             using var stream = arquivo.OpenReadStream();
 
-            var destinatarios = _excelService.LerDestinatarios(stream);
+            var resultado = _excelService.LerDestinatarios(stream);
 
             return Ok(new
             {
-                total = destinatarios.Count,
-                destinatarios
+                totalEncontrados = resultado.TotalEncontrados,
+                totalValidos = resultado.TotalValidos,
+                totalInvalidos = resultado.TotalInvalidos,
+                invalidos = resultado.DestinatariosInvalidos
             });
         }
 

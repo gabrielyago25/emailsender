@@ -83,8 +83,8 @@ public class EnviosController : ControllerBase
         {
             using var stream = arquivo.OpenReadStream();
 
-            destinatarios =
-                _excelService.LerDestinatarios(stream);
+            var resultado = _excelService.LerDestinatarios(stream);
+            destinatarios = resultado.DestinatariosValidos;
         }
         catch
         {

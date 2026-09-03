@@ -18,6 +18,7 @@ export async function validarPlanilha (arquivo: File): Promise<ResultadoValidaca
 
             mensagem = erro.mensagem ?? erro.message ?? mensagem;
         } catch {
+            mensagem = "Não foi possível validar a planilha.";
 
         } throw new Error(mensagem);
     }

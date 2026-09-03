@@ -1,14 +1,14 @@
 import {useState} from "react";
-import type {ChangeEvent, FormEvent} from "react";
+import type {ChangeEvent, SubmitEvent} from "react";
 
 import { validarPlanilha } from "../services/planilhaService";
-import type { Destinatario } from "../types/destinatario";
+import type {ResultadoValidacaoPlanilha} from "../types/planilha";
 
 export function NovoEnvioPage(){
     const [assunto, setAssunto] = useState("");
     const [corpo, setCorpo] = useState("");
     const [arquivo, setArquivo] = useState<File | null>(null);
-    const [destinatarios, setDestinatarios] = useState<Destinatario[]>([]);
+    const [validacao, setValidacao] = useState<ResultadoValidacaoPlanilha | null>(null);
     const [carregandoPlanilha, setCarregandoPlanilha] = useState(false);
     const [error, setErro] = useState<string | null>(null);
 
@@ -20,13 +20,13 @@ export function NovoEnvioPage(){
         }
 
         setArquivo(arquivoSelecionado);
-        setDestinatarios([]);
+        setValidacao(null);
         setErro(null);
         setCarregandoPlanilha(true);
 
         try {
             const resultado = await validarPlanilha(arquivoSelecionado);
-            setDestinatarios(resultado.destinatarios);
+            setValidacao(resultado);
         } catch (error) {
             setArquivo(null);
 
@@ -40,7 +40,7 @@ export function NovoEnvioPage(){
         }
     }
 
-    function handleSubmit(event: FormEvent<HTMLFormElement>){event.preventDefault();
+    function handleSubmit(event: SubmitEvent<HTMLFormElement>){event.preventDefault();
         if (!assunto.trim()){
             setErro("Informe o assunto do e-mail.");
             return;
@@ -53,12 +53,12 @@ export function NovoEnvioPage(){
             setErro("Selecione um arquivo.");
             return;
         }
-        if (destinatarios.length === 0){
+        if (!validacao || validacao.totalValidos === 0){
             setErro("O arquivo enviado não possui destinatários válidos.");
             return;
         }
         setErro(null);
-        console.log({assunto, corpo, arquivo, destinatarios});
+        console.log({assunto, corpo, arquivo, validacao});
     }
 
 
@@ -96,24 +96,53 @@ export function NovoEnvioPage(){
                         <input id="planilha" className="file-input" type="file" accept=".xlsx" onChange={handlePlanilhaChange}></input>
                         {arquivo ? (<span className="file-name">{arquivo.name}</span>) : (<span className="file-hint">Nenhum arquivo selecioando</span>)}
                     </div>
-                    {destinatarios.length > 0 && (
-                        <div className="recipients-card">
-                            <div className="recipients-summary">
-                                <strong>{destinatarios.length}</strong>
-                                <span>destinatário{destinatarios.length !== 1? "s": ""}{" "}válido{destinatarios.length !== 1? "s": ""}</span>
+                    {validacao && (
+                        <div className="validation-result">
+                            <div className="validation-summary">
+                            <div className="summary-item">
+                                <strong>{validacao.totalEncontrados}</strong><span>Encontrados</span>
                             </div>
-                            <div className="recipients-list">
-                                {destinatarios.map((destinatario) => (
-                                    <div className="recipient" key={destinatario.email}>
-                                        <strong>{destinatario.nome || "Sem nome"}</strong>
-                                        <span>{destinatario.email}</span>
+                            <div className="summary-item">
+                                <strong>{validacao.totalValidos}</strong>
+                                <span>Válidos</span>
+                            </div>
+
+                            <div className="summary-item">
+                                <strong>{validacao.totalInvalidos}</strong>
+                                <span>Inválidos</span>
+                            </div>
+                            </div>
+                            
+                            <div className="invalid-list">
+                                {validacao.invalidos.map((destinatario) => (
+                                    <div
+                                    className="invalid-recipient"
+                                    key={`${destinatario.linha}-${destinatario.email}`}
+                                    >
+                                    <span className="invalid-line">
+                                        Linha {destinatario.linha}
+                                    </span>
+
+                                    <div className="invalid-data">
+                                        <strong>
+                                        {destinatario.nome || "Sem nome"}
+                                        </strong>
+
+                                        <span>
+                                        {destinatario.email || "E-mail não informado"}
+                                        </span>
                                     </div>
-                                    )
-                                )}
+
+                                    <span className="invalid-reason">
+                                        {destinatario.motivo}
+                                    </span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    )}
+                        )}
                 </section>
+                
                 {error && (
                     <div className="error-message">
                         {error}

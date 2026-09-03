@@ -7,36 +7,104 @@ namespace EmailSender.Infrastructure.Services;
 
 public class ExcelService : IExcelService
 {
-    public List<Destinatario> LerDestinatarios(Stream arquivo)
+    public ResultadoLeituraPlanilha LerDestinatarios(Stream arquivo)
     {
-        var destinatarios = new List<Destinatario>();
-        var emailsAdicionados = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        using var workbook = new XLWorkbook(arquivo);
-        var worksheet = workbook.Worksheet(1);
-        var linhas = worksheet.RowsUsed().Skip(1);
+        var resultado = new ResultadoLeituraPlanilha();
 
+        var emailsAdicionados = new HashSet<string>(
+            StringComparer.OrdinalIgnoreCase
+        );
+
+        using var workbook = new XLWorkbook(arquivo);
+
+        var worksheet = workbook.Worksheet(1);
+
+        var linhas = worksheet
+            .RowsUsed()
+            .Skip(1);
 
         foreach (var linha in linhas)
         {
-            var nome = linha.Cell(1).GetString().Trim();
-            var email = linha.Cell(2).GetString().Trim();
+            var numeroLinha = linha.RowNumber();
 
-            if (string.IsNullOrWhiteSpace(email) || !EmailValido(email) || !emailsAdicionados.Add(email))
+            var nome = linha
+                .Cell(1)
+                .GetString()
+                .Trim();
+
+            var email = linha
+                .Cell(2)
+                .GetString()
+                .Trim();
+
+            // Ignora somente linhas completamente vazias.
+            if (string.IsNullOrWhiteSpace(nome) &&
+                string.IsNullOrWhiteSpace(email))
             {
                 continue;
             }
 
-            destinatarios.Add(new Destinatario
+            if (string.IsNullOrWhiteSpace(email))
             {
-                Nome = nome,
-                Email = email
-            });
+                resultado.DestinatariosInvalidos.Add(
+                    new DestinatarioInvalido
+                    {
+                        Linha = numeroLinha,
+                        Nome = nome,
+                        Email = email,
+                        Motivo = "E-mail não informado."
+                    }
+                );
+
+                continue;
+            }
+
+            if (!EmailValido(email))
+            {
+                resultado.DestinatariosInvalidos.Add(
+                    new DestinatarioInvalido
+                    {
+                        Linha = numeroLinha,
+                        Nome = nome,
+                        Email = email,
+                        Motivo = "E-mail inválido."
+                    }
+                );
+
+                continue;
+            }
+
+            // Add retorna:
+            // true  -> primeira ocorrência
+            // false -> já existia no HashSet
+            if (!emailsAdicionados.Add(email))
+            {
+                resultado.DestinatariosInvalidos.Add(
+                    new DestinatarioInvalido
+                    {
+                        Linha = numeroLinha,
+                        Nome = nome,
+                        Email = email,
+                        Motivo = "E-mail duplicado."
+                    }
+                );
+
+                continue;
+            }
+
+            resultado.DestinatariosValidos.Add(
+                new Destinatario
+                {
+                    Nome = nome,
+                    Email = email
+                }
+            );
         }
 
-        return destinatarios;
+        return resultado;
     }
 
-    private bool EmailValido(string email)
+    private static bool EmailValido(string email)
     {
         try
         {

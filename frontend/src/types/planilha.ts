@@ -1,6 +1,12 @@
-import type { Destinatario } from "./destinatario";
-
+export interface DestinatarioInvalido{
+    linha: number;
+    nome: string;
+    email: string;
+    motivo: string;
+}
 export interface ResultadoValidacaoPlanilha{
-    total: number;
-    destinatarios: Destinatario[];
+    totalEncontrados: number;
+    totalValidos: number;
+    totalInvalidos: number;
+    invalidos: DestinatarioInvalido[];
 }
