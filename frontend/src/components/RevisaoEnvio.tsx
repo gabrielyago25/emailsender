@@ -4,6 +4,7 @@ interface RevisaoEnvioProps {
     nomeArquivo: string,
     totalValidos: number,
     totalInvalidos: number,
+    confirmando: boolean,
     onVoltar: () => void;
     onConfirmar: () => void;
 
@@ -15,6 +16,7 @@ export function RevisaoEnvio({
     nomeArquivo,
     totalValidos,
     totalInvalidos,
+    confirmando,
     onVoltar,
     onConfirmar,
 }: RevisaoEnvioProps) {
@@ -65,8 +67,8 @@ export function RevisaoEnvio({
                     Após confirmar, o envio será iniciado e os e-mails serão processados individualmente.
                 </div>
                 <footer className="review-actions">
-                    <button type="button" className="secondary-button" onClick={onVoltar}>Voltar</button>
-                    <button type="button" className="primary-button" onClick={onConfirmar}>Enviar</button>
+                    <button type="button" className="secondary-button" onClick={onVoltar} disabled={confirmando}>Voltar</button>
+                    <button type="button" className="primary-button" onClick={onConfirmar} disabled={confirmando}>Enviar</button>
                 </footer>
             </div>
         </main>
