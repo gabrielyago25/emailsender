@@ -23,9 +23,8 @@ public class EmailService : IEmailService
         message.From.Add(new MailboxAddress(_settings.NomeRemetente, _settings.Remetente));
         message.To.Add(new MailboxAddress(emailMessage.DestinatarioNome, emailMessage.Destinatario));
         message.Subject = emailMessage.Assunto;
-        message.Body = new TextPart("plain"){
-            Text = emailMessage.Body
-        };
+        var bodyBuilder = new BodyBuilder {HtmlBody = emailMessage.Body};
+        message.Body = bodyBuilder.ToMessageBody();
 
         using var client = new SmtpClient();
         await client.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls, cancellationToken);

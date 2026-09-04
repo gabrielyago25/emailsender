@@ -8,6 +8,7 @@ import type { ResultadoValidacaoPlanilha } from "../types/planilha";
 
 import { RevisaoEnvio } from "../components/RevisaoEnvio";
 import { AcompanhamentoEnvio } from "../components/AcompanhamentoEnvio";
+import { EditorEmail } from "../components/EditorEmail";
 
 export function NovoEnvioPage() {
   // Dados do formulário
@@ -72,7 +73,7 @@ export function NovoEnvioPage() {
       return;
     }
 
-    if (!corpo.trim()) {
+    if (!possuiTexto(corpo)) {
       setErro("Informe o corpo do e-mail.");
       return;
     }
@@ -161,6 +162,16 @@ export function NovoEnvioPage() {
       />
     );
   }
+  function possuiTexto(html: string) {
+    const documento = new DOMParser().parseFromString(
+      html,
+      "text/html"
+    );
+
+    return Boolean(
+      documento.body.textContent?.trim()
+    );
+  }
 
   // Formulário de novo envio
   return (
@@ -171,8 +182,8 @@ export function NovoEnvioPage() {
 
       <form
         className="email-form"
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
+
         {/* Mensagem */}
         <section className="form-section">
           <h2>Novo Envio</h2>
@@ -187,31 +198,18 @@ export function NovoEnvioPage() {
               type="text"
               value={assunto}
               onChange={(event) =>
-                setAssunto(event.target.value)
-              }
+                setAssunto(event.target.value)}
               placeholder="Digite o assunto do e-mail"
               maxLength={200}
             />
 
-            <span className="character-count">
-              {assunto.length}/200
-            </span>
+            <span className="character-count">{assunto.length}/200</span>
           </div>
 
           <div className="form-group">
-            <label htmlFor="corpo">
-              Corpo do e-mail
-            </label>
+            <label htmlFor="corpo">Corpo do e-mail</label>
 
-            <textarea
-              id="corpo"
-              value={corpo}
-              onChange={(event) =>
-                setCorpo(event.target.value)
-              }
-              placeholder="Digite a mensagem que será enviada"
-              rows={20}
-            />
+            <EditorEmail value={corpo} onChange={setCorpo}/>
           </div>
         </section>
 
@@ -220,9 +218,7 @@ export function NovoEnvioPage() {
           <div className="section-title">
             <h2>Destinatários</h2>
 
-            <p>
-              Importe uma planilha no formato .XLSX
-            </p>
+            <p>Importe uma planilha no formato .XLSX</p>
           </div>
 
           {/* Upload */}

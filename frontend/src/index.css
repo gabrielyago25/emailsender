@@ -123,8 +123,7 @@ textarea {
   font-weight: 600;
 }
 
-.form-group input,
-.form-group textarea {
+.form-group input {
   width: 100%;
   padding: 12px 14px;
 
@@ -138,15 +137,9 @@ textarea {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-group input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
-}
-
-.form-group textarea {
-  min-height: 180px;
-  resize: vertical;
 }
 
 .character-count {
@@ -557,6 +550,93 @@ textarea {
   cursor: not-allowed;
 }
 
+/* ==============================
+   Editor de e-mail
+   ============================== */
+
+.email-editor {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  padding: 8px;
+
+  background: #f9fafb;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.editor-toolbar button,
+.editor-toolbar select {
+  min-height: 32px;
+  padding: 5px 9px;
+
+  color: var(--color-text);
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.editor-toolbar button:hover,
+.editor-toolbar select:hover {
+  background: #f3f4f6;
+}
+
+.editor-toolbar button.active {
+  color: var(--color-primary);
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.editor-toolbar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.editor-toolbar select {
+  background: var(--color-surface);
+  border-color: #d1d5db;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 22px;
+  margin: 0 4px;
+  background: var(--color-border);
+}
+
+/* Conteúdo editável do Tiptap */
+.email-editor .tiptap {
+  min-height: 240px;
+  padding: 14px;
+
+  outline: none;
+  line-height: 1.6;
+}
+
+.email-editor .tiptap p {
+  margin: 0 0 10px;
+}
+
+.email-editor .tiptap p:last-child {
+  margin-bottom: 0;
+}
+
+.email-editor .tiptap ul,
+.email-editor .tiptap ol {
+  padding-left: 24px;
+}
 
 /* ==============================
    Responsividade

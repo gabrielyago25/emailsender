@@ -1,3 +1,5 @@
+import DOMPurify from "dompurify"
+
 interface RevisaoEnvioProps {
     assunto: string,
     corpo: string,
@@ -37,8 +39,7 @@ export function RevisaoEnvio({
 
                     <div className="review-item">
                         <span>Mensagem</span>
-                        <div className="review-body">
-                            {corpo}
+                        <div className="review-body" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(corpo),}}>
                         </div>
                     </div>
                 </section>
