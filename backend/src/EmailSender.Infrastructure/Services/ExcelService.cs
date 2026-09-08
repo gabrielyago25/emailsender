@@ -115,4 +115,29 @@ public class ExcelService : IExcelService
             return false;
         }
     }
+
+    public byte[] GerarModeloDestinatarios()
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Destinatários");
+
+        worksheet.Cell("A1").Value = "Nome";
+        worksheet.Cell("B1").Value = "Email";
+        worksheet.Cell("A2").Value = "Exemplo Fulano de Tal";
+        worksheet.Cell("B2").Value = "exemplo@exemplo.com";
+        worksheet.Cell("A3").Value = "Exemplo 2";
+        worksheet.Cell("B3").Value = "exemplo2@exemplo.com";
+
+        var cabecalho = worksheet.Range("A1:B1");
+
+        cabecalho.Style.Font.Bold = true;
+        cabecalho.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+        worksheet.Column("A").Width = 35;
+        worksheet.Column("B").Width = 45;
+        worksheet.SheetView.FreezeRows(1);
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
 }

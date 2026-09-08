@@ -64,4 +64,11 @@ public class PlanilhasController : ControllerBase
             return BadRequest(new {mensagem = "Não foi possível processar a planilha."});
         }
     }
+
+    [HttpGet("modelo")]
+    public IActionResult BaixarModelo()
+    {
+        var arquivo = _excelService.GerarModeloDestinatarios();
+        return File(arquivo, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "modelo_destinatarios.xlsx");
+    }
 }

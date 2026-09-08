@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, SubmitEvent } from "react";
 
-import { validarPlanilha } from "../services/planilhaService";
+import { validarPlanilha, baixarModeloPlanilha } from "../services/planilhaService";
 import { criarEnvio } from "../services/envioService";
 
 import type { ResultadoValidacaoPlanilha } from "../types/planilha";
@@ -9,6 +9,7 @@ import type { ResultadoValidacaoPlanilha } from "../types/planilha";
 import { RevisaoEnvio } from "../components/RevisaoEnvio";
 import { AcompanhamentoEnvio } from "../components/AcompanhamentoEnvio";
 import { EditorEmail } from "../components/EditorEmail";
+import xlsxIcon from "../assets/xlsx_icon.png";
 
 export function NovoEnvioPage() {
   // Dados do formulário
@@ -172,6 +173,16 @@ export function NovoEnvioPage() {
     );
   }
 
+  async function handleBaixarModelo() {
+    setErro(null);
+
+    try {
+      await baixarModeloPlanilha();
+    } catch (error){
+      setErro(error instanceof Error ? error.message : "Não foi possível baixar o modelo.");
+    }
+  }
+
   // Formulário de novo envio
   return (
     <main className="container">
@@ -219,6 +230,7 @@ export function NovoEnvioPage() {
 
             <p>Importe uma planilha no formato .XLSX</p>
           </div>
+          <button type="button" className="download-model-button" onClick={handleBaixarModelo}><img src={xlsxIcon} alt="" className="button-icon" aria-hidden="true"></img><span>Baixar Modelo</span></button>
 
           {/* Upload */}
           <div className="upload-area">

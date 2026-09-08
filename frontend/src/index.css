@@ -639,6 +639,49 @@ textarea {
 }
 
 /* ==============================
+   Download do modelo
+   ============================== */
+
+.section-title-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.download-model-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 8px 12px;
+
+  color: #217346;
+  background: transparent;
+
+  border: 1px solid #217346;
+  border-radius: 7px;
+
+  margin-bottom: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.button-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.download-model-button:hover {
+  background: #eef2ff;
+}
+
+/* ==============================
    Responsividade
    ============================== */
 
@@ -680,4 +723,12 @@ textarea {
     align-items: flex-start;
     flex-direction: column;
   }
+  .section-title-actions {
+  flex-direction: column;
+  gap: 12px;
+}
+
+.download-model-button {
+  width: 100%;
+}
 }

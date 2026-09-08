@@ -5,4 +5,5 @@ namespace EmailSender.Core.Interfaces;
 public interface IExcelService
 {
     ResultadoLeituraPlanilha LerDestinatarios(Stream arquivo);
+    byte[] GerarModeloDestinatarios();
 }
