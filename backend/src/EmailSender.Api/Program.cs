@@ -26,6 +26,7 @@ builder.Services.AddSingleton(emailSettings);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IExcelService, ExcelService>();
+builder.Services.AddSingleton<IEmailContentSanitizer,EmailContentSanitizer>();
 builder.Services.AddScoped<EnvioService>();
 
 builder.Services.AddSingleton<EnvioJobStore>();

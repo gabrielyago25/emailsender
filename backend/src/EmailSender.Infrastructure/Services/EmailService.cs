@@ -10,10 +10,11 @@ namespace EmailSender.Infrastructure.Services;
 public class EmailService : IEmailService
 {
     private readonly EmailSettings _settings;
-
-    public EmailService(EmailSettings settings)
+    private readonly IEmailContentSanitizer _contentSanitizer;
+    public EmailService(EmailSettings settings, IEmailContentSanitizer contentSanitizer)
     {
         _settings = settings;
+        _contentSanitizer = contentSanitizer;
     }
 
     public async Task SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken = default){
@@ -23,7 +24,9 @@ public class EmailService : IEmailService
         message.From.Add(new MailboxAddress(_settings.NomeRemetente, _settings.Remetente));
         message.To.Add(new MailboxAddress(emailMessage.DestinatarioNome, emailMessage.Destinatario));
         message.Subject = emailMessage.Assunto;
-        var bodyBuilder = new BodyBuilder {HtmlBody = emailMessage.Body};
+        var htmlSanitizado = _contentSanitizer.Sanitizar(emailMessage.Body);
+        var textoSimples = _contentSanitizer.ConverterParaTexto(htmlSanitizado);
+        var bodyBuilder = new BodyBuilder {TextBody = textoSimples, HtmlBody = htmlSanitizado};
         message.Body = bodyBuilder.ToMessageBody();
 
         using var client = new SmtpClient();

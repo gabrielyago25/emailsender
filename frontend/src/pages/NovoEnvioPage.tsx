@@ -108,7 +108,6 @@ export function NovoEnvioPage() {
         assunto.trim(),
         corpo.trim()
       );
-
       setJobId(resultado.id);
       setRevisando(false);
     } catch (error) {
