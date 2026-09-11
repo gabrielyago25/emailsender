@@ -16,4 +16,8 @@
     <ProjectReference Include="..\EmailSender.Infrastructure\EmailSender.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

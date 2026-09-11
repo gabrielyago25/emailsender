@@ -11,6 +11,7 @@ builder.Services.AddControllers().AddJsonOptions(options => {options.JsonSeriali
 builder.Services.AddOpenApi();
 
 var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>();
+var assinaturaSettings = builder.Configuration.GetSection("Assinatura").Get<AssinaturaSettings>() ?? new AssinaturaSettings();
 
 if (emailSettings is null)
 {
@@ -22,7 +23,26 @@ if (string.IsNullOrWhiteSpace(emailSettings.Host) || string.IsNullOrWhiteSpace(e
     throw new InvalidOperationException("As configurações SMTP estão incompletas");
 }
 
+if (assinaturaSettings.Habilitada && !string.IsNullOrWhiteSpace(assinaturaSettings.CaminhoImagem))
+{
+    var caminhoImagem = assinaturaSettings.CaminhoImagem;
+
+    if (!Path.IsPathFullyQualified(caminhoImagem))
+    {
+        caminhoImagem = Path.Combine(builder.Environment.ContentRootPath, caminhoImagem);
+    }
+
+    assinaturaSettings.CaminhoImagem = Path.GetFullPath(caminhoImagem);
+
+    if (!File.Exists(assinaturaSettings.CaminhoImagem))
+    {
+        throw new InvalidOperationException(
+            $"A imagem da assinatura não foi encontrada em '{assinaturaSettings.CaminhoImagem}'.");
+    }
+}
+
 builder.Services.AddSingleton(emailSettings);
+builder.Services.AddSingleton(assinaturaSettings);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IExcelService, ExcelService>();
