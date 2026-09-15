@@ -175,17 +175,18 @@ O objetivo é evoluir o projeto para uma aplicação desktop simples para utiliz
 - [x] Realizar envio para múltiplos destinatários;
 - [x] Adicionar confirmação antes do envio;
 - [x] Exibir resultado dos envios;
-- [ ] Refatorar a lógica de envio para um `EnvioService`;
-- [ ] Melhorar validação dos dados da planilha;
-- [ ] Disponibilizar um modelo XLSX de destinatários;
-- [ ] Criar interface gráfica;
-- [ ] Permitir selecionar a planilha pela interface;
-- [ ] Criar campos para assunto e corpo do e-mail;
-- [ ] Exibir quantidade de destinatários encontrados;
-- [ ] Permitir visualizar os destinatários antes do envio;
-- [ ] Exibir progresso dos envios;
-- [ ] Exibir relatório final de sucessos e falhas;
+- [x] Refatorar a lógica de envio para um `EnvioService`;
+- [x] Melhorar validação dos dados da planilha;
+- [x] Disponibilizar um modelo XLSX de destinatários;
+- [x] Criar interface gráfica;
+- [x] Permitir selecionar a planilha pela interface;
+- [x] Criar campos para assunto e corpo do e-mail;
+- [x] Exibir quantidade de destinatários encontrados;
+- [x] Permitir visualizar os destinatários antes do envio;
+- [x] Exibir progresso dos envios;
+- [x] Exibir relatório final de sucessos e falhas;
 - [ ] Implementar personalização de mensagens por destinatário.
+- [ ] Implementar interface gráfica para configuração de usuário do e-mail.
 
 ## Interface planejada
 
