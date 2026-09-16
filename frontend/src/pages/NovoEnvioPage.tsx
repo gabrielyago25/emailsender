@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, SubmitEvent } from "react";
 
 import { validarPlanilha, baixarModeloPlanilha } from "../services/planilhaService";
@@ -31,6 +31,12 @@ export function NovoEnvioPage() {
 
   // Mensagens de erro
   const [erro, setErro] = useState<string | null>(null);
+  const validacaoAtual = useRef<AbortController | null>(null);
+
+  useEffect(() => () => {
+    validacaoAtual.current?.abort();
+    validacaoAtual.current = null;
+  }, []);
 
   async function handlePlanilhaChange(
     event: ChangeEvent<HTMLInputElement>
@@ -41,6 +47,12 @@ export function NovoEnvioPage() {
       return;
     }
 
+    validacaoAtual.current?.abort();
+    const controller = new AbortController();
+    validacaoAtual.current = controller;
+
+    // Permite selecionar novamente o mesmo arquivo após uma falha.
+    event.target.value = "";
     setArquivo(arquivoSelecionado);
     setValidacao(null);
     setErro(null);
@@ -48,10 +60,16 @@ export function NovoEnvioPage() {
 
     try {
       const resultado =
-        await validarPlanilha(arquivoSelecionado);
+        await validarPlanilha(arquivoSelecionado, controller.signal);
 
-      setValidacao(resultado);
+      if (validacaoAtual.current === controller) {
+        setValidacao(resultado);
+      }
     } catch (error) {
+      if (validacaoAtual.current !== controller) {
+        return;
+      }
+
       setArquivo(null);
 
       if (error instanceof Error) {
@@ -60,7 +78,10 @@ export function NovoEnvioPage() {
         setErro("Ocorreu um erro inesperado.");
       }
     } finally {
-      setCarregandoPlanilha(false);
+      if (validacaoAtual.current === controller) {
+        validacaoAtual.current = null;
+        setCarregandoPlanilha(false);
+      }
     }
   }
 
@@ -68,6 +89,10 @@ export function NovoEnvioPage() {
     event: SubmitEvent<HTMLFormElement>
   ) {
     event.preventDefault();
+
+    if (carregandoPlanilha) {
+      return;
+    }
 
     if (!assunto.trim()) {
       setErro("Informe o assunto do e-mail.");

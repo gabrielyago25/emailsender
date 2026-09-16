@@ -1,13 +1,14 @@
 import { API_URL } from "./api";
 import type { ResultadoValidacaoPlanilha } from "../types/planilha";
 
-export async function validarPlanilha (arquivo: File): Promise<ResultadoValidacaoPlanilha>{
+export async function validarPlanilha (arquivo: File, signal?: AbortSignal): Promise<ResultadoValidacaoPlanilha>{
     const formData = new FormData();
     formData.append("arquivo", arquivo);
 
     const response = await fetch(`${API_URL}/api/planilhas/validar`,{
         method: "POST",
         body: formData,
+        signal,
     });
 
     if (!response.ok) {
