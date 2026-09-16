@@ -6,6 +6,7 @@
     <Project Path="backend/src/EmailSender.Infrastructure/EmailSender.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/backend/tests/">
+    <Project Path="backend/tests/EmailSender.Api.Tests/EmailSender.Api.Tests.csproj" />
     <Project Path="backend/tests/EmailSender.Infrastructure.Tests/EmailSender.Infrastructure.Tests.csproj" />
   </Folder>
 </Solution>

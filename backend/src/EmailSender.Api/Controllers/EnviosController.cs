@@ -1,6 +1,9 @@
 using EmailSender.Api.Jobs;
 using EmailSender.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using EmailSender.Api.Configuration;
+using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace EmailSender.Api.Controllers;
 
@@ -11,15 +14,21 @@ public class EnviosController : ControllerBase
     private readonly IExcelService _excelService;
     private readonly EnvioJobStore _jobStore;
     private readonly EnvioJobQueue _jobQueue;
+    private readonly IEmailContentSanitizer _contentSanitizer;
+    private readonly LimitesMensagem _limites;
 
     public EnviosController(
         IExcelService excelService,
         EnvioJobStore jobStore,
-        EnvioJobQueue jobQueue)
+        EnvioJobQueue jobQueue,
+        IEmailContentSanitizer contentSanitizer,
+        IOptions<LimitesMensagem> limites)
     {
         _excelService = excelService;
         _jobStore = jobStore;
         _jobQueue = jobQueue;
+        _contentSanitizer = contentSanitizer;
+        _limites = limites.Value;
     }
 
     [HttpPost]
@@ -52,6 +61,34 @@ public class EnviosController : ControllerBase
             {
                 mensagem = "O corpo do e-mail é obrigatório."
             });
+        }
+
+        if (assunto.Length > _limites.AssuntoMaximoCaracteres)
+        {
+            return BadRequest(new { mensagem = $"O assunto não pode ultrapassar {_limites.AssuntoMaximoCaracteres} caracteres." });
+        }
+
+        if (assunto.Any(char.IsControl))
+        {
+            return BadRequest(new { mensagem = "O assunto não pode conter quebras de linha ou caracteres de controle." });
+        }
+
+        // Verifica a entrada antes de executar o parser HTML ou ler a planilha.
+        if (CorpoExcedeLimite(corpo))
+        {
+            return BadRequest(new { mensagem = $"O corpo do e-mail não pode ultrapassar {_limites.CorpoMaximoBytes} bytes em UTF-8." });
+        }
+
+        var corpoSanitizado = _contentSanitizer.Sanitizar(corpo).Trim();
+
+        if (CorpoExcedeLimite(corpoSanitizado))
+        {
+            return BadRequest(new { mensagem = $"O corpo sanitizado não pode ultrapassar {_limites.CorpoMaximoBytes} bytes em UTF-8." });
+        }
+
+        if (!_contentSanitizer.PossuiTexto(corpoSanitizado))
+        {
+            return BadRequest(new { mensagem = "O corpo do e-mail deve conter texto após a remoção de conteúdo não permitido." });
         }
 
         var extensao = Path.GetExtension(arquivo.FileName);
@@ -111,7 +148,7 @@ public class EnviosController : ControllerBase
             JobId = job.Id,
             Destinatarios = destinatarios,
             Assunto = assunto.Trim(),
-            Corpo = corpo.Trim()
+            Corpo = corpoSanitizado
         };
 
         await _jobQueue.EnfileirarAsync(
@@ -142,4 +179,8 @@ public class EnviosController : ControllerBase
 
         return Ok(job);
     }
+
+    private bool CorpoExcedeLimite(string corpo) =>
+        corpo.Length > _limites.CorpoMaximoBytes ||
+        Encoding.UTF8.GetByteCount(corpo) > _limites.CorpoMaximoBytes;
 }

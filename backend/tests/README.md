@@ -26,3 +26,15 @@ recuperação persistente pertencem às próximas etapas do roadmap.
 Os testes cobrem a composição MIME sanitizada, a contagem de sucesso quando a
 desconexão falha, a liberação do cliente, o cancelamento e a ausência da mensagem
 da exceção nos avisos de desconexão.
+
+## Validação da mensagem
+
+`EmailSender.Api.Tests` exercita o controller diretamente, com leitura de planilha
+simulada e sem iniciar o worker SMTP. Verifica rejeição antes da leitura XLSX e
+ausência de trabalho na fila para mensagens inválidas, limites de assunto e corpo
+em UTF-8, limites configurados e enfileiramento somente do HTML sanitizado.
+
+São testes do controller, não testes HTTP do pipeline de model binding. Os testes
+de infraestrutura também cobrem detecção de texto, listas vazias e caracteres
+invisíveis. Consulte os valores e regras em
+[Limites da mensagem](../src/EmailSender.Api/Configuration/README.md).

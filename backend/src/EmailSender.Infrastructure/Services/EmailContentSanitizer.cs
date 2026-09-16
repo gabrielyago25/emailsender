@@ -1,4 +1,5 @@
 using System.Text;
+using System.Globalization;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using EmailSender.Core.Interfaces;
@@ -49,6 +50,24 @@ public class EmailContentSanitizer : IEmailContentSanitizer
         }
         return _sanitizer.Sanitize(html);
     }
+    public bool PossuiTexto(string htmlSanitizado)
+    {
+        var document = new HtmlParser().ParseDocument(htmlSanitizado);
+        var texto = document.Body?.TextContent ?? string.Empty;
+
+        // Usa somente texto do documento, sem os marcadores gerados para listas.
+        foreach (var rune in texto.EnumerateRunes())
+        {
+            if (!Rune.IsWhiteSpace(rune) && !Rune.IsControl(rune) &&
+                Rune.GetUnicodeCategory(rune) != UnicodeCategory.Format)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public string ConverterParaTexto(string html)
     {
         if (string.IsNullOrWhiteSpace(html))

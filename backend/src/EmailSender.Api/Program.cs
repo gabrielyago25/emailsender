@@ -4,11 +4,17 @@ using EmailSender.Infrastructure.Configuration;
 using EmailSender.Infrastructure.Services;
 using EmailSender.Api.Jobs;
 using System.Text.Json.Serialization;
+using EmailSender.Api.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(options => {options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());});
 builder.Services.AddOpenApi();
+builder.Services.AddOptions<LimitesMensagem>()
+    .Bind(builder.Configuration.GetSection(LimitesMensagem.Secao))
+    .Validate(limites => limites.AssuntoMaximoCaracteres > 0 && limites.CorpoMaximoBytes > 0,
+        "Os limites de assunto e corpo devem ser positivos.")
+    .ValidateOnStart();
 
 var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>();
 var assinaturaSettings = builder.Configuration.GetSection("Assinatura").Get<AssinaturaSettings>() ?? new AssinaturaSettings();
