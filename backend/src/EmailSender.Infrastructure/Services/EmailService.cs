@@ -6,6 +6,7 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.Utils;
 using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace EmailSender.Infrastructure.Services;
 
@@ -14,14 +15,29 @@ public class EmailService : IEmailService
     private readonly EmailSettings _settings;
     private readonly AssinaturaSettings _assinaturaSettings;
     private readonly IEmailContentSanitizer _contentSanitizer;
+    private readonly ILogger<EmailService> _logger;
+    private readonly Func<ISmtpClient> _createClient;
     public EmailService(
         EmailSettings settings,
         AssinaturaSettings assinaturaSettings,
-        IEmailContentSanitizer contentSanitizer)
+        IEmailContentSanitizer contentSanitizer,
+        ILogger<EmailService> logger)
+        : this(settings, assinaturaSettings, contentSanitizer, logger, () => new SmtpClient())
+    {
+    }
+
+    internal EmailService(
+        EmailSettings settings,
+        AssinaturaSettings assinaturaSettings,
+        IEmailContentSanitizer contentSanitizer,
+        ILogger<EmailService> logger,
+        Func<ISmtpClient> createClient)
     {
         _settings = settings;
         _assinaturaSettings = assinaturaSettings;
         _contentSanitizer = contentSanitizer;
+        _logger = logger;
+        _createClient = createClient;
     }
 
     public async Task SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken = default){
@@ -40,11 +56,26 @@ public class EmailService : IEmailService
         bodyBuilder.HtmlBody = htmlCompleto;
         message.Body = bodyBuilder.ToMessageBody();
 
-        using var client = new SmtpClient();
+        using var client = _createClient();
         await client.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls, cancellationToken);
         await client.AuthenticateAsync(_settings.Usuario, _settings.Senha, cancellationToken);
         await client.SendAsync(message, cancellationToken);
-        await client.DisconnectAsync(true, cancellationToken);
+
+        // SendAsync concluído significa aceitação pelo SMTP. Uma falha no QUIT
+        // não pode transformar essa aceitação em falha e incentivar reenvio.
+        using var disconnectTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        disconnectTimeout.CancelAfter(TimeSpan.FromSeconds(5));
+
+        try
+        {
+            await client.DisconnectAsync(true, disconnectTimeout.Token);
+        }
+        catch (Exception)
+        {
+            // Não registrar a exceção SMTP: sua mensagem pode conter dados sensíveis.
+            // O using ainda libera a conexão quando a desconexão graciosa falha.
+            _logger.LogWarning("A mensagem foi aceita pelo SMTP, mas a desconexão não foi concluída normalmente.");
+        }
     }
 
     private string MontarAssinaturaHtml(BodyBuilder bodyBuilder)
