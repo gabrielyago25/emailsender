@@ -7,6 +7,7 @@ public class ProgressoEnvio
     public string? Nome {get; set;}
     public string? Email {get; set;}
     public StatusEnvio Status {get; set;}
+    public string? TipoFalha {get; set;}
     
     public int? SegundosRestantes {get; set;}
 

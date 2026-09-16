@@ -78,7 +78,7 @@ public class EnvioService
                     {
                         Nome = destinatario.Nome,
                         Email = destinatario.Email,
-                        Erro = ex.Message
+                        Erro = "Não foi possível confirmar o envio para este destinatário. Consulte o responsável pelo sistema antes de reenviar."
                     }
                 );
 
@@ -88,7 +88,8 @@ public class EnvioService
                     Total = destinatarios.Count,
                     Nome = destinatario.Nome,
                     Email = destinatario.Email,
-                    Status = StatusEnvio.Falha
+                    Status = StatusEnvio.Falha,
+                    TipoFalha = ex.GetType().Name
                 });
             }
 

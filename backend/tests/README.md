@@ -38,3 +38,22 @@ São testes do controller, não testes HTTP do pipeline de model binding. Os tes
 de infraestrutura também cobrem detecção de texto, listas vazias e caracteres
 invisíveis. Consulte os valores e regras em
 [Limites da mensagem](../src/EmailSender.Api/Configuration/README.md).
+
+## Falhas e finalização dos jobs
+
+Os testes do `EnvioBackgroundService` executam o worker com dependências simuladas
+e verificam mensagens públicas seguras, diagnóstico sem a mensagem da exceção,
+continuidade após um job falhar e limpeza do progresso temporário ao finalizar ou
+cancelar. Não há conexões SMTP reais.
+
+Falhas por destinatário registram `JobId`, ordem do destinatário e tipo da exceção.
+Falhas inesperadas do job registram `JobId` e tipo da exceção. Esses eventos não
+incluem o objeto da exceção, sua mensagem, corpo do e-mail ou endereço do
+destinatário. Isso limita o detalhe diagnóstico em favor da proteção dos dados;
+códigos específicos de provedores podem ser acrescentados futuramente mediante
+classificação segura.
+
+`Concluido` continua significando que todos os destinatários foram processados;
+o resultado pode conter falhas. Cancelamento não desfaz mensagens já aceitas pelo
+SMTP. Persistência e classificação durável de tentativas incertas permanecem
+pendentes no roadmap.

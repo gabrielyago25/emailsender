@@ -81,8 +81,8 @@ export function AcompanhamentoEnvio({
     );
   }
 
-  const concluido =
-    job.status === "Concluido";
+  const finalizado =
+    job.status === "Concluido" || job.status === "Falhou" || job.status === "Cancelado";
 
   return (
     <main className="container">
@@ -121,7 +121,7 @@ export function AcompanhamentoEnvio({
             />
           </div>
 
-          {job.destinatarioAtual && (
+          {!finalizado && job.destinatarioAtual && (
             <div className="current-recipient">
               <span>Destinatário atual</span>
               <strong>
@@ -130,7 +130,7 @@ export function AcompanhamentoEnvio({
             </div>
           )}
 
-          {job.etapaAtual === "Aguardando" &&
+          {!finalizado && job.etapaAtual === "Aguardando" &&
             job.segundosRestantes !== null && (
               <p className="countdown">
                 Próximo envio em{" "}
@@ -188,13 +188,25 @@ export function AcompanhamentoEnvio({
           )}
         </section>
 
+        {job.erro && (
+          <div className="error-message" role="alert">
+            {job.erro}
+          </div>
+        )}
+
+        {job.status === "Cancelado" && (
+          <p role="status">
+            O processamento foi cancelado. Mensagens já aceitas pelo servidor de e-mail não são desfeitas.
+          </p>
+        )}
+
         {erro && (
           <div className="error-message">
             {erro}
           </div>
         )}
 
-        {concluido && (
+        {finalizado && (
           <footer className="form-actions">
             <button
               type="button"

@@ -38,7 +38,7 @@ export interface EnvioJob {
     destinatarioAtual: string | null;
 
     detalhesFalhas: FalhaEnvio[];
-    errro: string | null;
+    erro: string | null;
 
     criadoEm: string;
     iniciadoEm: string | null;

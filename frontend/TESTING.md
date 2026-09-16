@@ -31,3 +31,11 @@ Para conferir o comportamento no navegador, use a limitação de rede nas ferram
 de desenvolvimento, selecione duas planilhas diferentes em sequência e confira os
 totais e o nome da segunda na revisão. Após uma falha de rede, selecione o mesmo
 arquivo novamente. Essa verificação complementa os testes em DOM simulado.
+
+## Acompanhamento
+
+Os testes de `AcompanhamentoEnvio` verificam o botão de novo envio nos estados
+`Concluido`, `Falhou` e `Cancelado`, a exibição textual do erro geral (`erro`), a
+remoção do progresso temporário nos estados finais e a interrupção do polling.
+Também verificam a recuperação de uma falha temporária de consulta sem considerar
+o job finalizado por causa do erro de rede.
